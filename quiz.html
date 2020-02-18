@@ -13124,37 +13124,44 @@ div#notebook {
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 <span class="kn">from</span> <span class="nn">ipywidgets</span> <span class="kn">import</span> <span class="n">interact</span><span class="p">,</span> <span class="n">interactive</span><span class="p">,</span> <span class="n">fixed</span><span class="p">,</span> <span class="n">interact_manual</span>
 
-<span class="kn">from</span> <span class="nn">ipywidgets</span> <span class="kn">import</span> <span class="n">RadioButtons</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Select</span><span class="p">,</span> <span class="n">Dropdown</span><span class="p">,</span> <span class="n">Label</span><span class="p">,</span> <span class="n">jslink</span><span class="p">,</span> <span class="n">Combobox</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">HTML</span><span class="p">,</span> <span class="n">VBox</span>
-<span class="kn">from</span> <span class="nn">ipywidgets.widgets.widget</span> <span class="kn">import</span> <span class="n">Widget</span><span class="p">,</span> <span class="n">register</span><span class="p">,</span> <span class="n">widget_serialization</span>
-<span class="kn">from</span> <span class="nn">ipywidgets.widgets.widget_core</span> <span class="kn">import</span> <span class="n">CoreWidget</span>
-<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span>  <span class="n">display</span><span class="p">,</span> <span class="n">clear_output</span>
+<span class="k">def</span> <span class="nf">square</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span>
 
-<span class="kn">from</span> <span class="nn">traitlets</span> <span class="kn">import</span> <span class="n">Unicode</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">TraitError</span>
-
-<span class="c1"># mcg is a list of lists </span>
-<span class="c1"># each list consists of a string (the stem) &amp; a list of distractor tuples (distractor string and response string)</span>
-<span class="n">mcq</span><span class="o">=</span><span class="p">[</span>
-<span class="p">[</span><span class="s1">&#39;The amount of gas exhaled after a maximal inpiration followed by a maximal expiration is the:&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s1">&#39;choose&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">),(</span><span class="s1">&#39;IC&#39;</span><span class="p">,</span> <span class="s1">&#39;Try again...&#39;</span><span class="p">),(</span><span class="s1">&#39;RV&#39;</span><span class="p">,</span><span class="s1">&#39;Try again...&#39;</span><span class="p">),(</span><span class="s1">&#39;VC&#39;</span><span class="p">,</span><span class="s1">&#39;Correct!&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;TV&#39;</span><span class="p">,</span> <span class="s1">&#39;Try again...&#39;</span><span class="p">)]],</span>
-<span class="p">[</span><span class="s1">&#39;The amount of gas in the lungs after a maximal inspiration is the:&#39;</span><span class="p">,[(</span><span class="s1">&#39;choose&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">),(</span><span class="s1">&#39;IC&#39;</span><span class="p">,</span><span class="s1">&#39;Try again...&#39;</span><span class="p">),(</span><span class="s1">&#39;IRV&#39;</span><span class="p">,</span><span class="s1">&#39;Try again...&#39;</span><span class="p">),(</span><span class="s1">&#39;TLC&#39;</span><span class="p">,</span><span class="s1">&#39;Correct!&#39;</span><span class="p">)]],</span>
-<span class="p">[</span><span class="s1">&#39;Where does gas exchange occur?&#39;</span><span class="p">,[(</span><span class="s1">&#39;choose&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">),(</span><span class="s1">&#39;pulmonary artery&#39;</span><span class="p">,</span><span class="s1">&#39;Try again...&#39;</span><span class="p">),(</span><span class="s1">&#39;bronchioles&#39;</span><span class="p">,</span><span class="s1">&#39;Try again...&#39;</span><span class="p">),(</span><span class="s1">&#39;alveoli&#39;</span><span class="p">,</span><span class="s1">&#39;Correct!&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;pleura&#39;</span><span class="p">,</span> <span class="s1">&#39;Try again...&#39;</span><span class="p">)]],</span>
-<span class="p">[</span><span class="s1">&#39;The pleura that surrounds the lungs consists of two layers, the ________.&#39;</span><span class="p">,[(</span><span class="s1">&#39;choose&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">),(</span><span class="s1">&#39;visceral &amp; parietal pleurae&#39;</span><span class="p">,</span><span class="s1">&#39;Correct!&#39;</span><span class="p">),(</span><span class="s1">&#39;mediastinal &amp; parietal pleurae&#39;</span><span class="p">,</span><span class="s1">&#39;Try again&#39;</span><span class="p">),(</span><span class="s1">&#39;visceral &amp; mediastinal pleurae&#39;</span><span class="p">,</span><span class="s1">&#39;Try again&#39;</span><span class="p">),(</span><span class="s1">&#39;none of the above&#39;</span><span class="p">,</span><span class="s1">&#39;Try again&#39;</span><span class="p">)]],</span>    
-<span class="p">[</span><span class="s1">&#39;finished&#39;</span><span class="p">,[(</span><span class="s1">&#39;no option&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)]]</span>    
-<span class="p">]</span>
+<span class="n">interact</span><span class="p">(</span><span class="n">square</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">10</span><span class="p">);</span>
 
 
 
+<span class="c1"># from ipywidgets import RadioButtons, Text, Select, Dropdown, Label, jslink, Combobox, Output, HTML, VBox</span>
+<span class="c1"># from ipywidgets.widgets.widget import Widget, register, widget_serialization</span>
+<span class="c1"># from ipywidgets.widgets.widget_core import CoreWidget</span>
+<span class="c1"># from IPython.display import  display, clear_output</span>
 
-<span class="n">i</span><span class="o">=</span><span class="mi">0</span>
-<span class="n">stem</span><span class="o">=</span><span class="n">mcq</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">distractors</span><span class="o">=</span><span class="n">mcq</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+<span class="c1"># from traitlets import Unicode, Tuple, Instance, TraitError</span>
+
+<span class="c1"># # mcg is a list of lists </span>
+<span class="c1"># # each list consists of a string (the stem) &amp; a list of distractor tuples (distractor string and response string)</span>
+<span class="c1"># mcq=[</span>
+<span class="c1"># [&#39;The amount of gas exhaled after a maximal inpiration followed by a maximal expiration is the:&#39;, [(&#39;choose&#39;,&#39;&#39;),(&#39;IC&#39;, &#39;Try again...&#39;),(&#39;RV&#39;,&#39;Try again...&#39;),(&#39;VC&#39;,&#39;Correct!&#39;), (&#39;TV&#39;, &#39;Try again...&#39;)]],</span>
+<span class="c1"># [&#39;The amount of gas in the lungs after a maximal inspiration is the:&#39;,[(&#39;choose&#39;,&#39;&#39;),(&#39;IC&#39;,&#39;Try again...&#39;),(&#39;IRV&#39;,&#39;Try again...&#39;),(&#39;TLC&#39;,&#39;Correct!&#39;)]],</span>
+<span class="c1"># [&#39;Where does gas exchange occur?&#39;,[(&#39;choose&#39;,&#39;&#39;),(&#39;pulmonary artery&#39;,&#39;Try again...&#39;),(&#39;bronchioles&#39;,&#39;Try again...&#39;),(&#39;alveoli&#39;,&#39;Correct!&#39;), (&#39;pleura&#39;, &#39;Try again...&#39;)]],</span>
+<span class="c1"># [&#39;The pleura that surrounds the lungs consists of two layers, the ________.&#39;,[(&#39;choose&#39;,&#39;&#39;),(&#39;visceral &amp; parietal pleurae&#39;,&#39;Correct!&#39;),(&#39;mediastinal &amp; parietal pleurae&#39;,&#39;Try again&#39;),(&#39;visceral &amp; mediastinal pleurae&#39;,&#39;Try again&#39;),(&#39;none of the above&#39;,&#39;Try again&#39;)]],    </span>
+<span class="c1"># [&#39;finished&#39;,[(&#39;no option&#39;,&#39;&#39;)]]    </span>
+<span class="c1"># ]</span>
 
 
-<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">stem</span><span class="p">,</span><span class="n">distractors</span><span class="p">):</span>
-    <span class="n">display</span><span class="p">(</span><span class="n">stem</span><span class="p">,</span><span class="n">distractors</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">stem</span><span class="p">,</span><span class="n">distractors</span>
 
-<span class="n">w</span><span class="o">=</span><span class="n">interactive</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">stem</span><span class="o">=</span><span class="n">stem</span><span class="p">,</span> <span class="n">distractors</span><span class="o">=</span><span class="n">distractors</span><span class="p">);</span>
-<span class="n">display</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+
+<span class="c1"># i=0</span>
+<span class="c1"># stem=mcq[i][0]</span>
+<span class="c1"># distractors=mcq[i][1]</span>
+
+
+<span class="c1"># def f(stem,distractors):</span>
+<span class="c1">#     display(stem,distractors)</span>
+<span class="c1">#     return stem,distractors</span>
+
+<span class="c1"># w=interactive(f, stem=stem, distractors=distractors);</span>
+<span class="c1"># display(w)</span>
 
 
 
